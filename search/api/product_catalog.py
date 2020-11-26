@@ -23,12 +23,25 @@ class ProductCatalog(APIView):
 
     @ExceptionHandler
     def get(self, req):
+        page = req.GET.get('page', 1)
+        limit = req.GET.get('limit', 25)
         title = req.GET.get('title', '')
+        start_index = (page - 1) * limit
+        end_index = start_index + limit
+
         search = Product.search().query(
             "match", title=title
-        )
-        search = search.execute()
-        print(search)
+        )[start_index: end_index]
+
+        search = search.execute().to_dict()
+        search_data = search.get('hits', {}).get('hits', [])
+        count = search.get('hits', {}).get('total', {}).get('value', 0)
+
+        result = list()
+        for data in search_data:
+            result.append(data.get('_source', {}))
+
         return JsonResponse({
-            "status": "Success"
+            "data": result,
+            "total_count": count
         }, status=HTTP_200_OK)

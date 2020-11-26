@@ -29,7 +29,7 @@ class ExceptionHandler:
             print(exc)
             return JsonResponse({
                 'status': 'Failure',
-                'message': "Error connecting the ES server."
+                'message': 'Please make sure the request data is valid.'
             }, status=exc.status_code)
         except ConnectionError as exc:
             print(exc)

@@ -6,10 +6,9 @@ from .index import ProductCatalogIndex
 @ProductCatalogIndex.document
 class Product(Document):
     product_id = Integer(required=True)
-    title = Text()
+    title = Text(required=True)
     description = Text()
     in_stock = Boolean()
     price = Float()
-    stock = Integer()
+    stock_count = Integer()
     image_urls = Nested()
-    product_meta = Object()
